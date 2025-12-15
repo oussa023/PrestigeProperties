@@ -68,29 +68,50 @@ cp .env.example .env.local
 # Edit .env.local with your credentials
 nano .env.local  # or use any text editor
 
-# 4. Run the development server
+## 4. Supabase Setup
+
+### Option A: Using Existing Supabase Project
+
+1. Go to [supabase.com](https://supabase.com/) and create a project.
+
+2. Get your project URL and anon/public key from **Settings → API**.
+
+3. Run the SQL migrations:
+
+#### Using Supabase CLI (recommended)
+# Link your local project to the Supabase project
+supabase link --project-ref <YOUR_PROJECT_REF>
+
+# Apply all migrations in supabase/migrations to your database
+supabase db push
+
+## 5. N8N Workflows Setup
+
+### Option A: Using n8n.io (Recommended)
+
+1. Log in to your n8n.io account.
+
+2. Import Workflows:
+- Go to Workflows page
+- Click "Import from file"
+- Select files from n8n-workflows/ folder
+- Import both workflow files
+
+3. Configure Workflow Credentials:
+- Open each workflow
+- Update webhook URLs and API endpoints to point to your local environment
+- Replace placeholder values with your actual credentials
+- Set workflows as "Active" for production
+
+4. Get N8N Webhook URLs:
+- Open each workflow in n8n.io
+- Find the Webhook node
+- Copy the webhook URL (looks like: https://your-n8n-instance.com/webhook/unique-id)
+- Add these URLs to your .env.local file
+
+
+# 6. Run the development server
 npm run dev
 
-# 5. Open the app in your browser
+# 7. Open the app in your browser
 # Navigate to http://localhost:3000
-
-# Optional: Build and run for production
-npm run build
-npm start
-
-# 7. Optional: Messaging Service Setup
-# Add your credentials to .env.local if using messaging:
-echo "TWILIO_ACCOUNT_SID=your_twilio_sid" >> .env.local
-echo "TWILIO_AUTH_TOKEN=your_twilio_auth_token" >> .env.local
-
-# 8. Optional: Set up n8n (automation workflows)
-npm install -g n8n
-n8n start
-
-# Configure workflows to integrate with Supabase or messaging services as needed
-# 9. Optional: Auto-refresh and live updates
-# The app polls for new leads and notes every 10 seconds by default. No additional setup is required.
-
-
-
-
