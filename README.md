@@ -55,18 +55,18 @@ And for the prompting the AI and its persona, we made sure its as professional a
 ```bash
 # 1. Clone the repository
 git clone https://github.com/oussa023/PrestigeProperties.git
-cd PrestigeProperties
+cd PrestigeProperties/prestige-properties
 
 # 2. Install dependencies
+nvm install --lts
 npm install
 
 # 3. Create environment variables
-# Create a file called .env.local in the root of the project
-# and add the following:
-echo "NEXT_PUBLIC_SUPABASE_URL=your_supabase_url" >> .env.local
-echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key" >> .env.local
+# Copy the environment template
+cp .env.example .env.local
 
-# Replace your_supabase_url and your_supabase_anon_key with actual credentials
+# Edit .env.local with your credentials
+nano .env.local  # or use any text editor
 
 # 4. Run the development server
 npm run dev
@@ -74,20 +74,20 @@ npm run dev
 # 5. Open the app in your browser
 # Navigate to http://localhost:3000
 
-# 6. Optional: Build and run for production
+# Optional: Build and run for production
 npm run build
 npm start
 
-# 7. Optional: Set up n8n (automation workflows)
-npm install -g n8n
-n8n start
-# Configure workflows to integrate with Supabase or messaging services as needed
-
-# 8. Optional: Messaging Service Setup
+# 7. Optional: Messaging Service Setup
 # Add your credentials to .env.local if using messaging:
 echo "TWILIO_ACCOUNT_SID=your_twilio_sid" >> .env.local
 echo "TWILIO_AUTH_TOKEN=your_twilio_auth_token" >> .env.local
 
+# 8. Optional: Set up n8n (automation workflows)
+npm install -g n8n
+n8n start
+
+# Configure workflows to integrate with Supabase or messaging services as needed
 # 9. Optional: Auto-refresh and live updates
 # The app polls for new leads and notes every 10 seconds by default. No additional setup is required.
 
