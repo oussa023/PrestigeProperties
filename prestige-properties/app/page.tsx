@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Search, Crown, MessageSquare, Phone, Mail, Calendar, DollarSign, Users, RefreshCw, Clock, TrendingUp, X, Plus, User, Smartphone, CalendarDays, Briefcase, Send} from 'lucide-react';
+import { Search, Crown, MessageSquare, Phone, Mail, Calendar, DollarSign, Users, RefreshCw, Clock, TrendingUp, X, Plus, User, Smartphone, CalendarDays, Briefcase, Send } from 'lucide-react';
 
 // Types
 type LeadStatus =
@@ -198,19 +198,22 @@ export default function Dashboard() {
   }, []);
 
   // Filter leads
-  const filteredLeads = leads ? leads.filter(lead => {
-    const matchesSearch = lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.phone.includes(searchTerm);
-    const matchesFilter = filterStatus === 'all' || lead.status === filterStatus;
-    return matchesSearch && matchesFilter;
-  }) : {};
+  // Before line 201, add:
+  const filteredLeads = Array.isArray(leads)
+    ? leads.filter(lead => {
+      const matchesSearch = lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.phone.includes(searchTerm);
+      const matchesFilter = filterStatus === 'all' || lead.status === filterStatus;
+      return matchesSearch && matchesFilter;
+    })
+    : [];
 
   // Stats
   const stats = {
-    total: leads.length,
-    vip: leads.filter(l => l.is_vip).length,
-    qualified: leads.filter(l => l.status === 'qualified').length,
-    inProgress: leads.filter(l => l.status === 'in_progress').length,
+    total: leads?.length || 0,
+    vip: leads?.filter(l => l.is_vip)?.length || 0,
+    qualified: leads?.filter(l => l.status === 'qualified')?.length || 0,
+    inProgress: leads?.filter(l => l.status === 'in_progress')?.length || 0,
   };
 
   // Status badge helper
@@ -370,7 +373,7 @@ export default function Dashboard() {
                   <input
                     type="text"
                     value={newLead.name}
-                    onChange={(e) => setNewLead({...newLead, name: e.target.value})}
+                    onChange={(e) => setNewLead({ ...newLead, name: e.target.value })}
                     placeholder="John Doe"
                     className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
                     required
@@ -387,7 +390,7 @@ export default function Dashboard() {
                   <input
                     type="tel"
                     value={newLead.phone}
-                    onChange={(e) => setNewLead({...newLead, phone: e.target.value})}
+                    onChange={(e) => setNewLead({ ...newLead, phone: e.target.value })}
                     placeholder="+1234567890"
                     className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
                     required
@@ -404,7 +407,7 @@ export default function Dashboard() {
                   <input
                     type="email"
                     value={newLead.email}
-                    onChange={(e) => setNewLead({...newLead, email: e.target.value})}
+                    onChange={(e) => setNewLead({ ...newLead, email: e.target.value })}
                     placeholder="john@example.com"
                     className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
                   />
@@ -422,7 +425,7 @@ export default function Dashboard() {
                     <input
                       type="number"
                       value={newLead.budget}
-                      onChange={(e) => setNewLead({...newLead, budget: e.target.value})}
+                      onChange={(e) => setNewLead({ ...newLead, budget: e.target.value })}
                       placeholder="500000"
                       className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
                     />
@@ -438,7 +441,7 @@ export default function Dashboard() {
                   </label>
                   <select
                     value={newLead.timeline}
-                    onChange={(e) => setNewLead({...newLead, timeline: e.target.value})}
+                    onChange={(e) => setNewLead({ ...newLead, timeline: e.target.value })}
                     className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
                   >
                     <option value="">Select timeline</option>
@@ -454,7 +457,7 @@ export default function Dashboard() {
                     type="checkbox"
                     id="is_vip"
                     checked={newLead.is_vip}
-                    onChange={(e) => setNewLead({...newLead, is_vip: e.target.checked})}
+                    onChange={(e) => setNewLead({ ...newLead, is_vip: e.target.checked })}
                     className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                   />
                   <label htmlFor="is_vip" className="flex items-center gap-2 text-sm text-slate-700">
@@ -469,7 +472,7 @@ export default function Dashboard() {
                   </label>
                   <textarea
                     value={newLead.notes}
-                    onChange={(e) => setNewLead({...newLead, notes: e.target.value})}
+                    onChange={(e) => setNewLead({ ...newLead, notes: e.target.value })}
                     placeholder="Any additional notes about this lead..."
                     rows={3}
                     className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent resize-none"
@@ -785,365 +788,4 @@ export default function Dashboard() {
       </div>
     </div>
   );
-  //   return (
-  //     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-  //       {/* Header */}
-  //       <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
-  //         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-  //           <div className="flex items-center justify-between">
-  //             <div>
-  //               <h1 className="text-2xl font-bold text-slate-900">Prestige Properties</h1>
-  //               <p className="text-sm text-slate-600">Lead Management System</p>
-  //             </div>
-  //             <button
-  //               onClick={handleRefresh}
-  //               disabled={refreshing}
-  //               className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50"
-  //             >
-  //               <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-  //               Refresh
-  //             </button>
-  //           </div>
-  //         </div>
-  //       </header>
-
-  //       {/* Stats */}
-  //       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-  //         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-  //           <div className="bg-white rounded-xl p-5 border border-slate-200">
-  //             <div className="flex items-center justify-between">
-  //               <div>
-  //                 <p className="text-sm text-slate-600">Total Leads</p>
-  //                 <p className="text-2xl font-bold text-slate-900 mt-1">{stats.total}</p>
-  //               </div>
-  //               <Users className="w-8 h-8 text-blue-500" />
-  //             </div>
-  //           </div>
-
-  //           <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl p-5 border border-amber-200">
-  //             <div className="flex items-center justify-between">
-  //               <div>
-  //                 <p className="text-sm text-amber-900 font-medium">VIP Leads</p>
-  //                 <p className="text-2xl font-bold text-amber-900 mt-1">{stats.vip}</p>
-  //               </div>
-  //               <Crown className="w-8 h-8 text-amber-500" />
-  //             </div>
-  //           </div>
-
-  //           <div className="bg-white rounded-xl p-5 border border-slate-200">
-  //             <div className="flex items-center justify-between">
-  //               <div>
-  //                 <p className="text-sm text-slate-600">Qualified</p>
-  //                 <p className="text-2xl font-bold text-green-600 mt-1">{stats.qualified}</p>
-  //               </div>
-  //               <TrendingUp className="w-8 h-8 text-green-500" />
-  //             </div>
-  //           </div>
-
-  //           <div className="bg-white rounded-xl p-5 border border-slate-200">
-  //             <div className="flex items-center justify-between">
-  //               <div>
-  //                 <p className="text-sm text-slate-600">In Progress</p>
-  //                 <p className="text-2xl font-bold text-yellow-600 mt-1">{stats.inProgress}</p>
-  //               </div>
-  //               <Clock className="w-8 h-8 text-yellow-500" />
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-
-  //       {/* Main Content */}
-  //       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-  //         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-  //           {/* Lead List */}
-  //           <div className="lg:col-span-1">
-  //             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-  //               <div className="p-4 border-b border-slate-200">
-  //                 <div className="relative mb-3">
-  //                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-  //                   <input
-  //                     type="text"
-  //                     placeholder="Search leads..."
-  //                     value={searchTerm}
-  //                     onChange={(e) => setSearchTerm(e.target.value)}
-  //                     className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-  //                   />
-  //                 </div>
-
-  //                 <div className="flex gap-2">
-  //                   {['all', 'new', 'in_progress', 'qualified'].map(status => (
-  //                     <button
-  //                       key={status}
-  //                       onClick={() => setFilterStatus(status)}
-  //                       className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${filterStatus === status
-  //                         ? 'bg-slate-900 text-white'
-  //                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-  //                         }`}
-  //                     >
-  //                       {status === 'all' ? 'All' : status.replace('_', ' ')}
-  //                     </button>
-  //                   ))}
-  //                 </div>
-  //               </div>
-
-  //               <div className="overflow-y-auto max-h-[600px]">
-  //                 {filteredLeads.length === 0 ? (
-  //                   <div className="p-8 text-center text-slate-500">
-  //                     <Users className="w-12 h-12 mx-auto mb-2 opacity-20" />
-  //                     <p>No leads found</p>
-  //                   </div>
-  //                 ) : (
-  //                   filteredLeads.map(lead => (
-  //                     <button
-  //                       key={lead.id}
-  //                       onClick={() => handleSelectLead(lead)}
-  //                       className={`w-full p-4 border-b border-slate-100 hover:bg-slate-50 transition-colors text-left ${selectedLead?.id === lead.id ? 'bg-slate-50' : ''
-  //                         }`}
-  //                     >
-  //                       <div className="flex items-start justify-between mb-2">
-  //                         <div className="flex-1">
-  //                           <div className="flex items-center gap-2 mb-1">
-  //                             <h3 className="font-semibold text-slate-900">{lead.name}</h3>
-  //                             {lead.is_vip && (
-  //                               <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-semibold text-amber-900 bg-gradient-to-r from-amber-200 to-yellow-200 rounded-full">
-  //                                 <Crown className="w-3 h-3" />
-  //                                 VIP
-  //                               </span>
-  //                             )}
-  //                           </div>
-  //                           <p className="text-xs text-slate-500">{lead.phone}</p>
-  //                         </div>
-  //                       </div>
-
-  //                       <div className="flex items-center justify-between">
-  //                         {getStatusBadge(lead.status)}
-  //                         <span className="text-xs text-slate-400">{formatDate(lead.created_at)}</span>
-  //                       </div>
-
-  //                       {lead.budget && (
-  //                         <p className="text-xs text-slate-600 mt-2 font-medium">
-  //                           {formatCurrency(lead.budget)}
-  //                         </p>
-  //                       )}
-  //                     </button>
-  //                   ))
-  //                 )}
-  //               </div>
-  //             </div>
-  //           </div>
-
-  //           {/* Lead Detail */}
-  //           <div className="lg:col-span-2">
-  //             {selectedLead ? (
-  //               <div className="space-y-6">
-  //                 {/* Lead Info Card */}
-  //                 <div className="bg-white rounded-xl border border-slate-200 p-6">
-  //                   <div className="flex items-start justify-between mb-4">
-  //                     <div>
-  //                       <div className="flex items-center gap-3 mb-2">
-  //                         <h2 className="text-2xl font-bold text-slate-900">{selectedLead.name}</h2>
-  //                         {selectedLead.is_vip && (
-  //                           <span className="inline-flex items-center gap-1 px-3 py-1 text-sm font-semibold text-amber-900 bg-gradient-to-r from-amber-200 to-yellow-200 rounded-full">
-  //                             <Crown className="w-4 h-4" />
-  //                             VIP Lead
-  //                           </span>
-  //                         )}
-  //                       </div>
-  //                       {getStatusBadge(selectedLead.status)}
-  //                     </div>
-  //                   </div>
-
-  //                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-  //                     <div className="flex items-center gap-3">
-  //                       <Phone className="w-5 h-5 text-slate-400" />
-  //                       <div>
-  //                         <p className="text-xs text-slate-500">Phone</p>
-  //                         <p className="text-sm font-medium text-slate-900">{selectedLead.phone}</p>
-  //                       </div>
-  //                     </div>
-
-  //                     {selectedLead.email && (
-  //                       <div className="flex items-center gap-3">
-  //                         <Mail className="w-5 h-5 text-slate-400" />
-  //                         <div>
-  //                           <p className="text-xs text-slate-500">Email</p>
-  //                           <p className="text-sm font-medium text-slate-900">{selectedLead.email}</p>
-  //                         </div>
-  //                       </div>
-  //                     )}
-
-  //                     <div className="flex items-center gap-3">
-  //                       <DollarSign className="w-5 h-5 text-slate-400" />
-  //                       <div>
-  //                         <p className="text-xs text-slate-500">Budget</p>
-  //                         <p className="text-sm font-medium text-slate-900">{formatCurrency(selectedLead.budget)}</p>
-  //                       </div>
-  //                     </div>
-
-  //                     <div className="flex items-center gap-3">
-  //                       <Calendar className="w-5 h-5 text-slate-400" />
-  //                       <div>
-  //                         <p className="text-xs text-slate-500">Timeline</p>
-  //                         <p className="text-sm font-medium text-slate-900">{selectedLead.timeline || 'Not specified'}</p>
-  //                       </div>
-  //                     </div>
-  //                   </div>
-  //                 </div>
-
-  //                 {/* Conversation History
-  //                 <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-  //                   <div className="p-4 border-b border-slate-200">
-  //                     <h3 className="font-semibold text-slate-900 flex items-center gap-2">
-  //                       <MessageSquare className="w-5 h-5" />
-  //                       Conversation History
-  //                     </h3>
-  //                   </div>
-
-  //                   <div className="p-4 space-y-4 max-h-96 overflow-y-auto">
-  //                     {conversations.length === 0 || !conversations ? (
-  //                       <p className="text-center text-slate-500 py-8">No conversation yet</p>
-  //                     ) : (
-  //                       conversations.map(conv => (
-  //                         <div
-  //                           key={conv.id}
-  //                           className={`flex ${conv.sender === 'ai' ? 'justify-start' : 'justify-end'}`}
-  //                         >
-  //                           <div
-  //                             className={`max-w-[80%] rounded-xl px-4 py-3 ${
-  //                               conv.sender === 'ai'
-  //                                 ? 'bg-slate-100 text-slate-900'
-  //                                 : 'bg-slate-900 text-white'
-  //                             }`}
-  //                           >
-  //                             <p className="text-xs font-medium mb-1 opacity-70">
-  //                               {conv.sender === 'ai' ? 'AI Assistant' : selectedLead.name}
-  //                             </p>
-  //                             <p className="text-sm whitespace-pre-wrap">{conv.message}</p>
-  //                             <p className="text-xs mt-2 opacity-60">{formatDate(conv.created_at)}</p>
-  //                           </div>
-  //                         </div>
-  //                       ))
-  //                     )}
-  //                   </div>
-  //                 </div> */}
-  //                 {/* Conversation History */}
-  //                 <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-  //                   <div className="p-4 border-b border-slate-200">
-  //                     <h3 className="font-semibold text-slate-900 flex items-center gap-2">
-  //                       <MessageSquare className="w-5 h-5" />
-  //                       Conversation History
-  //                     </h3>
-  //                   </div>
-
-  //                   <div className="p-4 space-y-4 max-h-96 overflow-y-auto">
-  //                     {(!conversations || !Array.isArray(conversations) || conversations.length === 0) ? (
-  //                       <p className="text-center text-slate-500 py-8">No conversation yet</p>
-  //                     ) : (
-  //                       conversations.map(conv => (
-  //                         <div
-  //                           key={conv.id}
-  //                           className={`flex ${conv.sender === 'ai' ? 'justify-start' : 'justify-end'}`}
-  //                         >
-  //                           <div
-  //                             className={`max-w-[80%] rounded-xl px-4 py-3 ${conv.sender === 'ai'
-  //                               ? 'bg-slate-100 text-slate-900'
-  //                               : 'bg-slate-900 text-white'
-  //                               }`}
-  //                           >
-  //                             <p className="text-xs font-medium mb-1 opacity-70">
-  //                               {conv.sender === 'ai' ? 'AI Assistant' : selectedLead.name}
-  //                             </p>
-  //                             <p className="text-sm whitespace-pre-wrap">{conv.message}</p>
-  //                             <p className="text-xs mt-2 opacity-60">{formatDate(conv.created_at)}</p>
-  //                           </div>
-  //                         </div>
-  //                       ))
-  //                     )}
-  //                   </div>
-  //                 </div>
-  //                 {/* Notes */}
-  //                 <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-  //                   <div className="p-4 border-b border-slate-200">
-  //                     <h3 className="font-semibold text-slate-900">Agent Notes</h3>
-  //                   </div>
-
-  //                   <div className="p-4">
-  //                     <div className="flex gap-2 mb-4">
-  //                       <input
-  //                         type="text"
-  //                         value={newNote}
-  //                         onChange={(e) => setNewNote(e.target.value)}
-  //                         placeholder="Add a private note..."
-  //                         className="flex-1 px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-  //                         onKeyPress={(e) => e.key === 'Enter' && handleAddNote()}
-  //                       />
-  //                       <button
-  //                         onClick={handleAddNote}
-  //                         className="px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors"
-  //                       >
-  //                         Add Note
-  //                       </button>
-  //                     </div>
-
-  //                     <div className="space-y-3">
-  //                       {(!notes || !Array.isArray(notes) || notes.length === 0) ? (
-  //                         <p className="text-center text-slate-500 py-4">No notes yet</p>
-  //                       ) : (
-  //                         notes.map(note => (
-  //                           <div key={note.id} className="p-3 bg-slate-50 rounded-lg">
-  //                             <p className="text-sm text-slate-900">{note.note}</p>
-  //                             <p className="text-xs text-slate-500 mt-1">{formatDate(note.created_at)}</p>
-  //                           </div>
-  //                         ))
-  //                       )}
-  //                     </div>
-  //                   </div>
-  //                 </div>
-  //                 {/* Notes
-  //                 <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-  //                   <div className="p-4 border-b border-slate-200">
-  //                     <h3 className="font-semibold text-slate-900">Agent Notes</h3>
-  //                   </div>
-
-  //                   <div className="p-4">
-  //                     <div className="flex gap-2 mb-4">
-  //                       <input
-  //                         type="text"
-  //                         value={newNote}
-  //                         onChange={(e) => setNewNote(e.target.value)}
-  //                         placeholder="Add a private note..."
-  //                         className="flex-1 px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-  //                         onKeyPress={(e) => e.key === 'Enter' && handleAddNote()}
-  //                       />
-  //                       <button
-  //                         onClick={handleAddNote}
-  //                         className="px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors"
-  //                       >
-  //                         Add Note
-  //                       </button>
-  //                     </div>
-
-  //                     <div className="space-y-3">
-  //                       {notes.map(note => (
-  //                         <div key={note.id} className="p-3 bg-slate-50 rounded-lg">
-  //                           <p className="text-sm text-slate-900">{note.note}</p>
-  //                           <p className="text-xs text-slate-500 mt-1">{formatDate(note.created_at)}</p>
-  //                         </div>
-  //                       ))}
-  //                     </div>
-  //                   </div>
-  //                 </div> */}
-  //               </div>
-  //             ) : (
-  //               <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-  //                 <Users className="w-16 h-16 mx-auto mb-4 text-slate-300" />
-  //                 <h3 className="text-lg font-semibold text-slate-900 mb-2">Select a Lead</h3>
-  //                 <p className="text-slate-600">Choose a lead from the list to view details and conversation history</p>
-  //               </div>
-  //             )}
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
 }
