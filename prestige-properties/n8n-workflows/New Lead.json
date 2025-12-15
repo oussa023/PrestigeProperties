@@ -1,0 +1,165 @@
+{
+  "name": "New Lead",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-lead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "34b37f46-7fe2-496b-8da9-a2b1fec3a8dc",
+      "name": "Webhook",
+      "webhookId": "8a9e21fb-2381-4341-b0c6-81d7184d3bd0"
+    },
+    {
+      "parameters": {
+        "from": "+14155238886",
+        "to": "={{ $json.phone }}",
+        "toWhatsapp": true,
+        "message": "=Hello {{ $json.name }}! 👋  I'm the digital assistant for Prestige Properties, specialists in luxury condominiums.  Thank you for your interest in our exclusive properties. To ensure I connect you with the perfect condo and the right specialist, I'd love to learn more about your requirements.  May I start by asking: *What is your budget range for your new luxury condominium?*  Please reply with an amount (e.g., \"$2,500,000\" or \"around 3 million\").",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "0b6dafc2-d8a1-444b-aad1-819f8bcd2ae0",
+      "name": "Send an SMS/MMS/WhatsApp message",
+      "credentials": {
+        "twilioApi": {
+          "id": "TBweUIPaGsAACSNg",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "conversations",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "lead_id",
+              "fieldValue": "={{ $('Create Lead').item.json.id }}"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $json.body }}"
+            },
+            {
+              "fieldId": "sender",
+              "fieldValue": "ai"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "5c2c1977-3c12-40b1-9c7a-641e24444774",
+      "name": "save ai message",
+      "credentials": {
+        "supabaseApi": {
+          "id": "iF3zHiq6pZ5Snvvv",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "leads",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "=name",
+              "fieldValue": "={{ $json.body.name }}"
+            },
+            {
+              "fieldId": "phone",
+              "fieldValue": "={{ $json.body.phone }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $json.body.email }}"
+            },
+            {
+              "fieldId": "telegram_username",
+              "fieldValue": "={{ $json.body.telegram_username }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "044f38a4-e7d9-471d-a96e-6c2f216437d6",
+      "name": "Create Lead",
+      "credentials": {
+        "supabaseApi": {
+          "id": "iF3zHiq6pZ5Snvvv",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Create Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send an SMS/MMS/WhatsApp message": {
+      "main": [
+        [
+          {
+            "node": "save ai message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Lead": {
+      "main": [
+        [
+          {
+            "node": "Send an SMS/MMS/WhatsApp message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9cb4a90b-f36d-4978-8cf2-77608adf8635",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "05fe59d80facc62fdaa773728fe113a6bfd48a0a90e8c4951e4f43da4627ea58"
+  },
+  "id": "OAqu2tyE6JsfVMXr",
+  "tags": []
+}
